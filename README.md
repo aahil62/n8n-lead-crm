@@ -1,115 +1,155 @@
-# AI Lead Qualification, CRM and Follow-Up System
+# AI Lead Qualification → HubSpot CRM (n8n)
 
 [![Validate public workflow package](https://github.com/aahil62/n8n-ai-lead-qualification-crm/actions/workflows/validate.yml/badge.svg)](https://github.com/aahil62/n8n-ai-lead-qualification-crm/actions/workflows/validate.yml)
 
-Production-minded n8n lead qualification, HubSpot CRM handoff, follow-up and audit workflows. Qualifies inbound leads consistently, routes uncertain cases to review, and creates CRM records only after deterministic checks pass.
+![AI lead qualification and HubSpot CRM automation built in n8n](assets/hero.png)
 
-## Verified proof
+**Every inbound lead is checked, scored and routed the same way, and only qualified leads become HubSpot deals, with a task for the right salesperson.**
 
-| Evidence | Verified result |
-|---|---|
-| Runtime path | Representative end-to-end path passed |
-| External systems | n8n, Airtable, HubSpot test account, Asana, and an OpenAI-compatible model endpoint |
-| AI boundary | AI extracts structured buying signals; deterministic scoring and routing rules control CRM actions. |
-| Duplicate behavior | Designed and fixture-covered; a public live duplicate-replay claim is not made. |
-| Production boundary | Controlled test environment using fictional data |
+AI reads the enquiry and pulls out the facts that matter (budget, timeline, project size, who decides, how ready they are). **Your scoring rules, not the AI, decide the score.** Leads the AI isn't sure about wait in a review queue for a person instead of being guessed at.
 
-A representative lead path passed through intake, AI signal extraction, deterministic scoring, Airtable state management, HubSpot contact/company/deal handling, and an Asana owner notification.
+---
 
-This is representative live-path evidence, not a claim that every production scenario has passed.
+## Is this for you?
 
-## Architecture
+This system fits a team that:
+
+- gets enquiries from a website form, landing page or ad and handles them by hand,
+- uses **HubSpot** (or wants to) and needs clean contacts, companies and deals,
+- wastes sales time on leads with no budget, no timeline or no decision-maker,
+- has had leads go cold because nobody followed up.
+
+## What happens to each lead
 
 ```mermaid
 flowchart LR
-    A["Form or webhook"] --> B["Validate and normalize"]
-    B --> C{"Duplicate?"}
-    C -->|Yes| D["Return existing state"]
-    C -->|No| E["AI signal extraction"]
-    E --> F{"Confidence and schema gate"}
-    F -->|Review| G["Human review queue"]
-    F -->|Pass| H["Deterministic score"]
-    H --> I{"Qualified?"}
-    I -->|No| J["Nurture or stop"]
-    I -->|Yes| K["HubSpot handoff"]
-    K --> L["Verify CRM IDs"]
-    L --> M["Update state and notify owner"]
-    K -. failure .-> N["Audit and dead-letter"]
+    A["New enquiry<br/>form or webhook"] --> B["Check it<br/>valid? seen before?"]
+    B --> C["AI reads it<br/>budget, timeline, role"]
+    C --> D{"Is the AI sure?"}
+    D -->|No| R["Review queue<br/>a person decides"]
+    D -->|Yes| E["Score with your rules"]
+    E --> F{"Qualified?"}
+    F -->|Yes| G["HubSpot contact,<br/>company and deal"]
+    G --> H["Task for the<br/>sales owner"]
+    F -->|Not yet| N["Nurture with a<br/>follow-up date"]
 ```
 
-## Business process and reliability
+1. **Capture.** Leads arrive from an n8n form or any tool that can call a webhook (website, Typeform, Webflow, ads).
+2. **Check.** The lead is validated and normalised. If the same submission arrives twice, the workflow returns the existing record instead of creating a second one.
+3. **Understand.** An AI model extracts intent and buying signals as structured data. The lead's text is treated as untrusted, so instructions hidden in a message are ignored.
+4. **Score.** Rules from a simple Airtable table add points for each signal. The AI never assigns the score.
+5. **Act.**
+   - **Qualified (score 70+):** creates or updates the HubSpot contact, company and deal, confirms HubSpot returned the IDs, then creates an Asana task for the owner with the score, source and summary.
+   - **Not ready yet:** stored as nurture with a follow-up date.
+   - **Existing customer or spam:** routed separately, with no new sales deal.
+   - **AI unsure (confidence below 0.70) or AI output broken:** sent to the review queue, with no CRM changes.
+6. **Follow through.** A daily sweep creates reminder tasks for due follow-ups, sending each reminder once. A weekly report summarises the pipeline from the stored numbers.
 
-- canonical input normalization and explicit validation
-- idempotency or stable record mapping before side effects
-- deterministic rules around irreversible business actions
-- confidence and human-review gates where AI is used
-- capped retries for transient failures
-- audit records, dead-letter handling, and replay paths
-- destination verification before a record is marked successful
-- inactive workflow exports with credentials removed
+## One lead, start to finish
 
-## Test evidence
+This is the lead used in the live end-to-end test. All data is fictional.
 
-- [Test report](docs/test-report.md)
-- [Test plan and remaining matrix](docs/test-plan.md)
-- [Verification boundaries](docs/verification.md)
+> *"We need a 6-month retainer for lead gen automation. Budget around $12k, decision mine, ready to start next month."*
+> — Priya Sharma, Northstar Growth Studio (website form)
 
-15 lead scenarios covering valid, duplicate, low-confidence, prompt-injection, CRM failure, and follow-up cases.
-
-## Workflow package
-
-| ID | Workflow | Responsibility |
-|---|---|---|
-| P1-01 | [`p1-lead-intake.json`](workflows/p1-lead-intake.json) | Form and webhook intake, canonical validation, deduplication |
-| P1-02 | [`p1-qualification-core.json`](workflows/p1-qualification-core.json) | AI signal extraction, schema/confidence gate, deterministic scoring |
-| P1-03 | [`p1-crm-handoff.json`](workflows/p1-crm-handoff.json) | HubSpot upsert, ID verification, owner notification, failure paths |
-| P1-04 | [`p1-follow-up-sweeper.json`](workflows/p1-follow-up-sweeper.json) | Scheduled follow-up reminders without duplicate alerts |
-| P1-05 | [`p1-weekly-pipeline-report.json`](workflows/p1-weekly-pipeline-report.json) | Deterministic pipeline aggregates and weekly delivery |
-| P0-99 | [`shared-error-handler.json`](workflows/shared-error-handler.json) | Shared audit, alert, redaction, and dead-letter handling |
-
-
-## Model-provider status
-
-| Provider | Status |
+| Step | Result |
 |---|---|
-| Groq-hosted OpenAI-compatible endpoint | Representative live path verified |
-| OpenAI | Architecture-compatible; test before claiming verified |
-| Anthropic/Claude | Not verified in this package |
+| AI extraction | Intent `new_lead`, confidence **0.90**; all five signals found (budget, timeline, project size, decision authority, readiness) |
+| Rule-based score | **100 / 100 → hot → qualified** |
+| HubSpot | Contact, company and deal created, then confirmed by their returned IDs |
+| Airtable | Lead marked `synced` only **after** HubSpot confirmed the IDs |
+| Asana | Owner task created with the score, source, intent and summary |
 
+## You control the rules
 
-## Known limit
+Scoring lives in an Airtable table your team can edit, so there's no workflow change needed to adjust it. These are the example rules shipped in [`config/scoring-config.sample.csv`](config/scoring-config.sample.csv):
 
-The remaining replay, malformed-input, rate-limit, and notification-failure matrix is documented but has not been run live as a complete production gate.
+| Signal the AI found | Rule | Points |
+|---|---|---:|
+| Budget | mentioned | 25 |
+| Timeline | mentioned | 20 |
+| Project size | mentioned | 15 |
+| Decision authority | owner, founder, director, head, VP, CEO, CFO | 25 |
+| Readiness | ready, now, ASAP, approved | 15 |
 
-## Review the repository
+Scores of **70+** are hot and qualified, **40–69** warm, and below 40 cold. Owners, notification channel and booking link for each route come from [`config/routing-config.sample.csv`](config/routing-config.sample.csv).
 
-- [Architecture](docs/architecture.md)
-- [Data contract](docs/data-contract.md)
-- [Setup guide](docs/setup.md)
-- [Placeholder map](docs/placeholder-map.md)
-- [Test plan](docs/test-plan.md)
-- [Test report](docs/test-report.md)
-- [Verification and limitations](docs/verification.md)
-- [Sanitized fixtures](fixtures)
-- [Configuration samples](config)
-- [Repository usage terms](USAGE.md)
+## Built so it doesn't fail quietly
 
+| Safeguard | What it prevents |
+|---|---|
+| Duplicate check before any write | Double-submitted forms creating two contacts or deals |
+| AI extracts, rules decide | A model "hallucinating" a hot lead |
+| Confidence gate (0.70) → human review | Unclear leads being guessed at |
+| Lead text treated as untrusted data | Prompt-injection text steering the AI |
+| `synced` only after HubSpot returns IDs | A failed CRM call looking successful |
+| Returning leads keep earlier facts | A follow-up email erasing the budget given last week |
+| Shared error handler with audit log and dead-letter queue | Errors disappearing, with no way to replay the failed lead |
+| Credentials stay in your n8n, exports are inactive | Secrets in workflow files, or something going live by accident |
 
-## Import and test
+## What's been tested
 
-1. Import `workflows/shared-error-handler.json` into a test n8n instance.
-2. Import the project workflows.
-3. Follow [the placeholder map](docs/placeholder-map.md) and reconnect sub-workflow IDs.
-4. Create credentials inside n8n. Do not place secrets in workflow JSON.
-5. Validate every workflow and keep it inactive.
-6. Run the fixtures against disposable accounts before enabling schedules or webhooks.
+Testing used a sandbox with fictional data, an n8n instance, Airtable, a HubSpot test account, Asana, and a Groq-hosted model through an OpenAI-compatible endpoint.
 
-Run the repository check locally:
+| Status | Scenario |
+|---|---|
+| ✅ Passed live | Qualified lead: intake → AI → score → HubSpot contact, company and deal → verified → Asana task |
+| 🧪 Test case written, not yet run live | Warm and cold leads, low AI confidence, existing customer, spam, duplicate submission, returning lead, HubSpot 429/5xx and 401 errors, AI timeout, notification failure, follow-up timing, prompt injection, weekly report |
+
+Each scenario has a fixture file in [`fixtures/`](fixtures). Expected and actual results are in the [test report](docs/test-report.md). The safeguards above are in the workflow logic. The test report shows exactly which ones have been exercised live so far.
+
+## Adapting it to your business
+
+| Part | Shipped with | Can be swapped for |
+|---|---|---|
+| Lead source | n8n form + webhook | Website forms, Typeform, Webflow, Facebook/Google lead ads, email |
+| CRM | HubSpot (contacts, companies, deals) | Pipedrive, Zoho, GoHighLevel or another CRM with an API (adaptation work) |
+| Owner alert | Asana task | Slack, email, Microsoft Teams |
+| Rules and state | Airtable | Google Sheets or a database |
+| AI model | Any OpenAI-compatible endpoint | OpenAI, Groq, Azure OpenAI and similar |
+
+A typical first milestone is one lead source, your HubSpot fields, your scoring rules and one alert channel, tested end to end with your sample leads before anything goes live.
+
+## Questions clients usually ask
+
+**Will the AI email or call my leads?**
+No. It reads and summarises. Every customer-facing action comes from your rules and your team.
+
+**Where does my data live?**
+In your own n8n, Airtable and HubSpot accounts. Credentials are stored in n8n's encrypted credential store, never in the workflow files.
+
+**What if HubSpot is down or the AI times out?**
+By design, the lead isn't marked as synced. The failure goes to a dead-letter table with enough context to replay it, and configuration errors such as an expired token create an alert task. These failure paths have written test cases but haven't been run live yet.
+
+**Can I change how leads are scored?**
+Yes. Edit the scoring table in Airtable, with no workflow change needed.
+
+## What's in this repository
+
+| Workflow | What it does |
+|---|---|
+| [`p1-lead-intake.json`](workflows/p1-lead-intake.json) | Form and webhook intake, validation, duplicate check |
+| [`p1-qualification-core.json`](workflows/p1-qualification-core.json) | AI extraction, confidence gate, rule-based score and route |
+| [`p1-crm-handoff.json`](workflows/p1-crm-handoff.json) | HubSpot contact, company and deal, ID check, owner task, failure paths |
+| [`p1-follow-up-sweeper.json`](workflows/p1-follow-up-sweeper.json) | Daily follow-up reminders, sent once each |
+| [`p1-weekly-pipeline-report.json`](workflows/p1-weekly-pipeline-report.json) | Weekly pipeline numbers with a short AI-written summary |
+| [`shared-error-handler.json`](workflows/shared-error-handler.json) | Error audit, dead-letter queue and alert |
+
+**For technical reviewers:** [workflow maps](docs/workflow-maps.md) · [architecture](docs/architecture.md) · [data contract](docs/data-contract.md) · [setup guide](docs/setup.md) · [placeholder map](docs/placeholder-map.md) · [test plan](docs/test-plan.md) · [verification and limits](docs/verification.md) · [Airtable schema](config/airtable-schema.md)
+
+To check the package locally:
 
 ```bash
 node scripts/validate-repository.mjs
 ```
 
-## Portfolio context
+## Work with me
 
-This repository is a sanitized engineering case study by [Aahil Sayed](https://github.com/aahil62). It is designed to show workflow architecture, reliability decisions, test coverage, and reusable integration patterns. Client deployments still require account-specific field mapping, credentials, acceptance criteria, and production testing.
+I'm **Aahil Sayed**. I build n8n automations for lead handling, CRM updates and inbox operations. I can adapt this system to your form, CRM and rules, or walk you through it live on a short call.
+
+- **Hire me on Upwork:** [upwork.com/freelancers/~01c6df3ebf5b39913a](https://www.upwork.com/freelancers/~01c6df3ebf5b39913a)
+- **More work:** [github.com/aahil62](https://github.com/aahil62)
+
+---
+
+<sub>Portfolio case study built with fictional data in a test environment, not a client deployment. A real rollout is set up and tested against your own accounts, fields and rules before go-live. Reuse terms are in [USAGE.md](USAGE.md).</sub>

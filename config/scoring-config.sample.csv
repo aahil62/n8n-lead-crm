@@ -1,4 +1,6 @@
-signal,operator,value,weight,active
-budget_supplied,exists,,25,true
-decision_maker_role,regex,owner|founder|director,25,true
-urgent_readiness,regex,ready|asap|approved,15,true
+field,operator,expected_value,points,active
+budget,exists,,25,true
+timeline,exists,,20,true
+project_size,exists,,15,true
+decision_authority,regex,owner|founder|director|head|vp|ceo|cfo,25,true
+readiness,regex,ready|now|immediate|asap|approved,15,true

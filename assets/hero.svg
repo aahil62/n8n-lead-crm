@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640" font-family="Inter, -apple-system, 'SF Pro Display', 'Segoe UI', Helvetica, Arial, sans-serif">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#07111F"/><stop offset=".6" stop-color="#0C1728"/><stop offset="1" stop-color="#111D31"/></linearGradient>
+<linearGradient id="line" x1="0" x2="1"><stop offset="0" stop-color="#59E3C2"/><stop offset="1" stop-color="#61A8FF"/></linearGradient>
+<radialGradient id="glow"><stop offset="0" stop-color="#2AD4AE" stop-opacity=".22"/><stop offset="1" stop-color="#2AD4AE" stop-opacity="0"/></radialGradient>
+<pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#93A4BD" stroke-opacity=".05"/></pattern>
+</defs>
+<rect width="1280" height="640" fill="url(#bg)"/>
+<rect width="1280" height="640" fill="url(#grid)"/>
+<circle cx="1000" cy="160" r="360" fill="url(#glow)"/>
+<rect x="72" y="58" width="184" height="38" rx="19" fill="#13263A" stroke="#59E3C2" stroke-opacity=".5"/>
+<circle cx="96" cy="77" r="6" fill="#59E3C2"/>
+<text x="112" y="83" font-size="15" font-weight="700" letter-spacing="1.6" fill="#E6EEF8">BUILT IN n8n</text>
+<text x="72" y="172" font-size="54" font-weight="800" fill="#FFFFFF">AI Lead Qualification</text>
+<text x="72" y="240" font-size="54" font-weight="800" fill="#FFFFFF">→ HubSpot CRM</text>
+<text x="72" y="294" font-size="25" fill="#B4C3D6">Capture → check → score → route → hand off</text>
+<rect x="72" y="326" width="440" height="3" rx="1.5" fill="url(#line)"/>
+<rect x="72" y="372" width="204.5" height="40" rx="20" fill="#122235" stroke="#59E3C2" stroke-opacity=".7"/>
+<text x="174.25" y="398" text-anchor="middle" font-size="15" font-weight="700" letter-spacing="1.2" fill="#E6EEF8">HUMAN REVIEW GATE</text>
+<rect x="290.5" y="372" width="215" height="40" rx="20" fill="#122235" stroke="#61A8FF" stroke-opacity=".7"/>
+<text x="398" y="398" text-anchor="middle" font-size="15" font-weight="700" letter-spacing="1.2" fill="#E6EEF8">VERIFIED CRM WRITE</text>
+<circle cx="86" cy="456" r="12" fill="#14283C"/><path d="M80 456 l4 4 l8 -9" fill="none" stroke="#59E3C2" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="110" y="462" font-size="20" fill="#C9D5E3">AI reads the enquiry; your scoring rules decide</text>
+<circle cx="86" cy="496" r="12" fill="#14283C"/><path d="M80 496 l4 4 l8 -9" fill="none" stroke="#59E3C2" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="110" y="502" font-size="20" fill="#C9D5E3">Qualified leads become HubSpot deals + owner task</text>
+<circle cx="86" cy="536" r="12" fill="#14283C"/><path d="M80 536 l4 4 l8 -9" fill="none" stroke="#F5B947" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="110" y="542" font-size="20" fill="#C9D5E3">Unclear leads wait for a person, not a guess</text>
+<text x="72" y="604" font-size="15" font-weight="600" letter-spacing="1.4" fill="#7E8FA6">FICTIONAL TEST DATA · AAHIL SAYED</text>
+<text x="1192" y="604" text-anchor="end" font-size="17" font-weight="700" fill="#DCE6F2">AI reads. Your rules decide.</text>
+<rect x="808" y="120" width="376" height="84" rx="16" fill="#16263A" stroke="#2A3D55" stroke-opacity="1"/>
+<text x="830" y="156" font-size="17" font-weight="700" fill="#F3F7FC">New lead received</text>
+<text x="830" y="182" font-size="14" fill="#8FA2BA">Website form · Northstar Growth Studio</text>
+<path d="M990 214 v22" stroke="#5B6B82" stroke-dasharray="4 5" stroke-width="2"/><circle cx="990" cy="240" r="6" fill="#59E3C2"/>
+<rect x="808" y="248" width="376" height="128" rx="16" fill="#0F1E30" stroke="#59E3C2" stroke-opacity="0.55"/>
+<text x="830" y="282" font-size="13" font-weight="700" letter-spacing="1.6" fill="#8FA2BA">QUALIFICATION RESULT</text>
+<text x="830" y="332" font-size="44" font-weight="800" fill="#FFFFFF">100</text>
+<text x="925" y="328" font-size="17" font-weight="700" fill="#59E3C2">score</text>
+<rect x="1090" y="300" width="72" height="34" rx="17" fill="#59E3C2" fill-opacity=".16"/>
+<text x="1126" y="323" text-anchor="middle" font-size="14" font-weight="800" fill="#59E3C2">HOT</text>
+<text x="830" y="360" font-size="14" fill="#8FA2BA">AI confidence 0.90 · scored by rules</text>
+<path d="M990 386 v22" stroke="#5B6B82" stroke-dasharray="4 5" stroke-width="2"/><circle cx="990" cy="412" r="6" fill="#61A8FF"/>
+<rect x="808" y="420" width="182" height="84" rx="16" fill="#16263A" stroke="#2A3D55"/>
+<text x="828" y="456" font-size="16" font-weight="700" fill="#F3F7FC">HubSpot</text>
+<text x="828" y="482" font-size="14" fill="#8FA2BA">Contact · company · deal</text>
+<rect x="1002" y="420" width="182" height="84" rx="16" fill="#16263A" stroke="#2A3D55"/>
+<text x="1022" y="456" font-size="16" font-weight="700" fill="#F3F7FC">Asana</text>
+<text x="1022" y="482" font-size="14" fill="#8FA2BA">Owner task created</text>
+</svg>
