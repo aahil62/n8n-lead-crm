@@ -5,7 +5,7 @@
     "source": "webhook",
     "source_event_id": "wh-2032",
     "name": "Sam Owens",
-    "email": "sam@northstar.example",
+    "email": "sam@example.com",
     "company": null,
     "message": "Hey, saw your post, maybe interested? Not sure.",
     "consent_status": "unknown",

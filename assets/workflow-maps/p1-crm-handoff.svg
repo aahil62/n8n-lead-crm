@@ -2,7 +2,7 @@
 <rect width="5604" height="770" rx="18" fill="#FFFFFF"/>
 <rect x="1" y="1" width="5602" height="768" rx="18" fill="none" stroke="#E2E8F0" stroke-width="2"/>
 <text x="80" y="58" font-size="24" font-weight="700" fill="#111827">P1-03 CRM Handoff</text>
-<text x="80" y="84" font-size="14" fill="#6B7280">30 nodes · generated from the exported n8n workflow JSON</text>
+<text x="80" y="84" font-size="14" fill="#6B7280">34 nodes · generated from the exported n8n workflow JSON</text>
 <path d="M144,342 C232,342 232,342 314,342" fill="none" stroke="#9AA5B4" stroke-width="2"/><path d="M312,337 L320,342 L312,347 Z" fill="#9AA5B4"/>
 <path d="M384,342 C472,342 472,342 554,342" fill="none" stroke="#9AA5B4" stroke-width="2"/><path d="M552,337 L560,342 L552,347 Z" fill="#9AA5B4"/>
 <path d="M624,342 C712,342 712,342 794,342" fill="none" stroke="#9AA5B4" stroke-width="2"/><path d="M792,337 L800,342 L792,347 Z" fill="#9AA5B4"/>
@@ -16,7 +16,7 @@
 <text x="1352" y="360" font-size="12" fill="#5B6575">route 3</text>
 <path d="M1604,182 C1702,182 1702,342 1794,342" fill="none" stroke="#9AA5B4" stroke-width="2"/><path d="M1792,337 L1800,342 L1792,347 Z" fill="#9AA5B4"/>
 <path d="M1604,462 C1702,462 1702,342 1794,342" fill="none" stroke="#9AA5B4" stroke-width="2"/><path d="M1792,337 L1800,342 L1792,347 Z" fill="#9AA5B4"/>
-<path d="M1864,342 C1952,342 1952,342 2034,342" fill="none" stroke="#9AA5B4" stroke-width="2"/><path d="M2032,337 L2040,342 L2032,347 Z" fill="#9AA5B4"/>
+<path d="M1864,342 C1904,342 1880,502 1914,502" fill="none" stroke="#9AA5B4" stroke-width="2"/><path d="M1912,497 L1920,502 L1912,507 Z" fill="#9AA5B4"/>
 <path d="M2104,342 C2192,342 2192,342 2274,342" fill="none" stroke="#9AA5B4" stroke-width="2"/><path d="M2272,337 L2280,342 L2272,347 Z" fill="#9AA5B4"/>
 <path d="M2344,342 C2432,342 2432,342 2514,342" fill="none" stroke="#9AA5B4" stroke-width="2"/><path d="M2512,337 L2520,342 L2512,347 Z" fill="#9AA5B4"/>
 <path d="M2584,342 C2672,342 2672,182 2754,182" fill="none" stroke="#9AA5B4" stroke-width="2"/><path d="M2752,177 L2760,182 L2752,187 Z" fill="#9AA5B4"/>
@@ -25,7 +25,7 @@
 <text x="2592" y="360" font-size="12" fill="#5B6575">false</text>
 <path d="M2824,182 C2912,182 2912,342 2994,342" fill="none" stroke="#9AA5B4" stroke-width="2"/><path d="M2992,337 L3000,342 L2992,347 Z" fill="#9AA5B4"/>
 <path d="M3064,342 C3152,342 3152,342 3234,342" fill="none" stroke="#9AA5B4" stroke-width="2"/><path d="M3232,337 L3240,342 L3232,347 Z" fill="#9AA5B4"/>
-<path d="M3304,342 C3392,342 3392,342 3474,342" fill="none" stroke="#9AA5B4" stroke-width="2"/><path d="M3472,337 L3480,342 L3472,347 Z" fill="#9AA5B4"/>
+<path d="M3304,342 C3344,342 3320,502 3354,502" fill="none" stroke="#9AA5B4" stroke-width="2"/><path d="M3352,497 L3360,502 L3352,507 Z" fill="#9AA5B4"/>
 <path d="M3544,342 C3632,342 3632,342 3714,342" fill="none" stroke="#9AA5B4" stroke-width="2"/><path d="M3712,337 L3720,342 L3712,347 Z" fill="#9AA5B4"/>
 <path d="M3784,342 C3872,342 3872,342 3954,342" fill="none" stroke="#9AA5B4" stroke-width="2"/><path d="M3952,337 L3960,342 L3952,347 Z" fill="#9AA5B4"/>
 <path d="M4024,342 C4112,342 4112,182 4194,182" fill="none" stroke="#9AA5B4" stroke-width="2"/><path d="M4192,177 L4200,182 L4192,187 Z" fill="#9AA5B4"/>
@@ -50,6 +50,16 @@
 <path d="M4744,422 C4832,422 4832,562 4914,562" fill="none" stroke="#9AA5B4" stroke-width="2"/><path d="M4912,557 L4920,562 L4912,567 Z" fill="#9AA5B4"/>
 <path d="M4984,562 C5072,562 5072,562 5154,562" fill="none" stroke="#9AA5B4" stroke-width="2"/><path d="M5152,557 L5160,562 L5152,567 Z" fill="#9AA5B4"/>
 <path d="M5224,562 C5312,562 5312,562 5394,562" fill="none" stroke="#9AA5B4" stroke-width="2"/><path d="M5392,557 L5400,562 L5392,567 Z" fill="#9AA5B4"/>
+<path d="M1984,502 C2024,502 2000,342 2034,342" fill="none" stroke="#9AA5B4" stroke-width="2"/><path d="M2032,337 L2040,342 L2032,347 Z" fill="#9AA5B4"/>
+<text x="1992" y="494" font-size="12" fill="#5B6575">true</text>
+<path d="M1984,502 C3092,502 3092,562 4194,562" fill="none" stroke="#9AA5B4" stroke-width="2"/><path d="M4192,557 L4200,562 L4192,567 Z" fill="#9AA5B4"/>
+<text x="1992" y="520" font-size="12" fill="#5B6575">false</text>
+<path d="M3424,502 C3464,502 3440,502 3474,502" fill="none" stroke="#9AA5B4" stroke-width="2"/><path d="M3472,497 L3480,502 L3472,507 Z" fill="#9AA5B4"/>
+<path d="M3544,502 C3584,502 3560,502 3594,502" fill="none" stroke="#9AA5B4" stroke-width="2"/><path d="M3592,497 L3600,502 L3592,507 Z" fill="#9AA5B4"/>
+<path d="M3664,502 C3704,502 3440,342 3474,342" fill="none" stroke="#9AA5B4" stroke-width="2"/><path d="M3472,337 L3480,342 L3472,347 Z" fill="#9AA5B4"/>
+<text x="3672" y="494" font-size="12" fill="#5B6575">true</text>
+<path d="M3664,502 C3704,502 3680,342 3714,342" fill="none" stroke="#9AA5B4" stroke-width="2"/><path d="M3712,337 L3720,342 L3712,347 Z" fill="#9AA5B4"/>
+<text x="3672" y="520" font-size="12" fill="#5B6575">false</text>
 <g><rect x="80" y="310" width="64" height="64" rx="14" fill="#E7F8EF" stroke="#2F9E6A" stroke-width="2.5"/><text x="112" y="347" text-anchor="middle" font-size="15" font-weight="700" fill="#2F9E6A">▶</text><text x="112" y="394" text-anchor="middle" font-size="13" font-weight="600" fill="#1F2937"><tspan x="112" dy="0">On CRM Handoff</tspan><tspan x="112" dy="16">Request</tspan></text></g>
 <g><rect x="320" y="310" width="64" height="64" rx="14" fill="#FFF1E6" stroke="#D9822B" stroke-width="2.5"/><text x="352" y="347" text-anchor="middle" font-size="15" font-weight="700" fill="#D9822B">{ }</text><text x="352" y="394" text-anchor="middle" font-size="13" font-weight="600" fill="#1F2937"><tspan x="352" dy="0">Prepare CRM Input</tspan></text></g>
 <g><rect x="560" y="310" width="64" height="64" rx="14" fill="#E9F0FF" stroke="#3E6FD8" stroke-width="2.5"/><text x="592" y="347" text-anchor="middle" font-size="15" font-weight="700" fill="#3E6FD8">DB</text><text x="592" y="394" text-anchor="middle" font-size="13" font-weight="600" fill="#1F2937"><tspan x="592" dy="0">Set CRM Sync</tspan><tspan x="592" dy="16">Pending</tspan></text></g>
@@ -59,12 +69,16 @@
 <g><rect x="1540" y="150" width="64" height="64" rx="14" fill="#FDECEF" stroke="#D6456B" stroke-width="2.5"/><text x="1572" y="187" text-anchor="middle" font-size="15" font-weight="700" fill="#D6456B">API</text><text x="1572" y="234" text-anchor="middle" font-size="13" font-weight="600" fill="#1F2937"><tspan x="1572" dy="0">Update HubSpot</tspan><tspan x="1572" dy="16">Contact</tspan></text></g>
 <g><rect x="1540" y="430" width="64" height="64" rx="14" fill="#FDECEF" stroke="#D6456B" stroke-width="2.5"/><text x="1572" y="467" text-anchor="middle" font-size="15" font-weight="700" fill="#D6456B">API</text><text x="1572" y="514" text-anchor="middle" font-size="13" font-weight="600" fill="#1F2937"><tspan x="1572" dy="0">Create HubSpot</tspan><tspan x="1572" dy="16">Contact</tspan></text></g>
 <g><rect x="1800" y="310" width="64" height="64" rx="14" fill="#FFF1E6" stroke="#D9822B" stroke-width="2.5"/><text x="1832" y="347" text-anchor="middle" font-size="15" font-weight="700" fill="#D9822B">{ }</text><text x="1832" y="394" text-anchor="middle" font-size="13" font-weight="600" fill="#1F2937"><tspan x="1832" dy="0">Capture Contact ID</tspan></text></g>
+<g><rect x="1920" y="470" width="64" height="64" rx="14" fill="#E8F4F8" stroke="#2B8BA8" stroke-width="2.5"/><text x="1952" y="507" text-anchor="middle" font-size="15" font-weight="700" fill="#2B8BA8">IF</text><text x="1952" y="554" text-anchor="middle" font-size="13" font-weight="600" fill="#1F2937"><tspan x="1952" dy="0">Contact Captured?</tspan></text></g>
 <g><rect x="2040" y="310" width="64" height="64" rx="14" fill="#FDECEF" stroke="#D6456B" stroke-width="2.5"/><text x="2072" y="347" text-anchor="middle" font-size="15" font-weight="700" fill="#D6456B">API</text><text x="2072" y="394" text-anchor="middle" font-size="13" font-weight="600" fill="#1F2937"><tspan x="2072" dy="0">Search HubSpot</tspan><tspan x="2072" dy="16">Company</tspan></text></g>
 <g><rect x="2280" y="310" width="64" height="64" rx="14" fill="#FFF1E6" stroke="#D9822B" stroke-width="2.5"/><text x="2312" y="347" text-anchor="middle" font-size="15" font-weight="700" fill="#D9822B">{ }</text><text x="2312" y="394" text-anchor="middle" font-size="13" font-weight="600" fill="#1F2937"><tspan x="2312" dy="0">Resolve Company</tspan></text></g>
 <g><rect x="2520" y="310" width="64" height="64" rx="14" fill="#E8F4F8" stroke="#2B8BA8" stroke-width="2.5"/><text x="2552" y="347" text-anchor="middle" font-size="15" font-weight="700" fill="#2B8BA8">IF</text><text x="2552" y="394" text-anchor="middle" font-size="13" font-weight="600" fill="#1F2937"><tspan x="2552" dy="0">Company Needed?</tspan></text></g>
 <g><rect x="2760" y="150" width="64" height="64" rx="14" fill="#FDECEF" stroke="#D6456B" stroke-width="2.5"/><text x="2792" y="187" text-anchor="middle" font-size="15" font-weight="700" fill="#D6456B">API</text><text x="2792" y="234" text-anchor="middle" font-size="13" font-weight="600" fill="#1F2937"><tspan x="2792" dy="0">Create HubSpot</tspan><tspan x="2792" dy="16">Company</tspan></text></g>
 <g><rect x="3000" y="310" width="64" height="64" rx="14" fill="#FFF1E6" stroke="#D9822B" stroke-width="2.5"/><text x="3032" y="347" text-anchor="middle" font-size="15" font-weight="700" fill="#D9822B">{ }</text><text x="3032" y="394" text-anchor="middle" font-size="13" font-weight="600" fill="#1F2937"><tspan x="3032" dy="0">Capture Company ID</tspan></text></g>
 <g><rect x="3240" y="310" width="64" height="64" rx="14" fill="#FFF1E6" stroke="#D9822B" stroke-width="2.5"/><text x="3272" y="347" text-anchor="middle" font-size="15" font-weight="700" fill="#D9822B">{ }</text><text x="3272" y="394" text-anchor="middle" font-size="13" font-weight="600" fill="#1F2937"><tspan x="3272" dy="0">Prepare Deal</tspan><tspan x="3272" dy="16">Request</tspan></text></g>
+<g><rect x="3360" y="470" width="64" height="64" rx="14" fill="#FDECEF" stroke="#D6456B" stroke-width="2.5"/><text x="3392" y="507" text-anchor="middle" font-size="15" font-weight="700" fill="#D6456B">API</text><text x="3392" y="554" text-anchor="middle" font-size="13" font-weight="600" fill="#1F2937"><tspan x="3392" dy="0">Search Open Deal</tspan></text></g>
+<g><rect x="3480" y="470" width="64" height="64" rx="14" fill="#FFF1E6" stroke="#D9822B" stroke-width="2.5"/><text x="3512" y="507" text-anchor="middle" font-size="15" font-weight="700" fill="#D9822B">{ }</text><text x="3512" y="554" text-anchor="middle" font-size="13" font-weight="600" fill="#1F2937"><tspan x="3512" dy="0">Resolve Deal</tspan></text></g>
+<g><rect x="3600" y="470" width="64" height="64" rx="14" fill="#E8F4F8" stroke="#2B8BA8" stroke-width="2.5"/><text x="3632" y="507" text-anchor="middle" font-size="15" font-weight="700" fill="#2B8BA8">IF</text><text x="3632" y="554" text-anchor="middle" font-size="13" font-weight="600" fill="#1F2937"><tspan x="3632" dy="0">Deal Needed?</tspan></text></g>
 <g><rect x="3480" y="310" width="64" height="64" rx="14" fill="#FDECEF" stroke="#D6456B" stroke-width="2.5"/><text x="3512" y="347" text-anchor="middle" font-size="15" font-weight="700" fill="#D6456B">API</text><text x="3512" y="394" text-anchor="middle" font-size="13" font-weight="600" fill="#1F2937"><tspan x="3512" dy="0">Create HubSpot</tspan><tspan x="3512" dy="16">Deal</tspan></text></g>
 <g><rect x="3720" y="310" width="64" height="64" rx="14" fill="#FFF1E6" stroke="#D9822B" stroke-width="2.5"/><text x="3752" y="347" text-anchor="middle" font-size="15" font-weight="700" fill="#D9822B">{ }</text><text x="3752" y="394" text-anchor="middle" font-size="13" font-weight="600" fill="#1F2937"><tspan x="3752" dy="0">Verify CRM Result</tspan></text></g>
 <g><rect x="3960" y="310" width="64" height="64" rx="14" fill="#E8F4F8" stroke="#2B8BA8" stroke-width="2.5"/><text x="3992" y="347" text-anchor="middle" font-size="15" font-weight="700" fill="#2B8BA8">IF</text><text x="3992" y="394" text-anchor="middle" font-size="13" font-weight="600" fill="#1F2937"><tspan x="3992" dy="0">CRM Verified?</tspan></text></g>

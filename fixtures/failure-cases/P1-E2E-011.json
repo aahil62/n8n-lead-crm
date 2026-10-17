@@ -5,7 +5,7 @@
     "source": "webhook",
     "source_event_id": "wh-2033",
     "name": "Vikram Joshi",
-    "email": "vikram@northstar.example",
+    "email": "vikram@example.com",
     "company": "Joshi Labs",
     "message": "Need automation for our funnel.",
     "consent_status": "unknown",

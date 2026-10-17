@@ -5,7 +5,7 @@
     "source": "webhook",
     "source_event_id": "wh-2031",
     "name": "Dev Patel",
-    "email": "dev.patel@northstar.example",
+    "email": "dev.patel@example.com",
     "company": "Acme Co",
     "message": "Interested in your automation service. Looking to start in 4 weeks for a team of 8.",
     "consent_status": "unknown",
