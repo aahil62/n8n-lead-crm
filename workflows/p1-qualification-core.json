@@ -247,6 +247,31 @@
     },
     {
       "parameters": {
+        "authentication": "accessToken",
+        "resource": "task",
+        "operation": "create",
+        "workspace": "REPLACE-ASANA-WORKSPACE-ID",
+        "name": "={{ '[REVIEW] Lead needs human review: ' + $('Prepare AI Input').item.json.lead_id + ' (' + $('Confidence & Schema Gate').item.json.gate_reason + ')' }}",
+        "otherProperties": {
+          "projects": [
+            "REPLACE-ASANA-PROJECT-ID"
+          ],
+          "notes": "=The AI gate did not pass this lead. It has a pending review_queue record and its lead row is marked review_required. Nothing was sent to the CRM.\n\nLead ID: {{ $('Prepare AI Input').item.json.lead_id }}\nCorrelation ID: {{ $('Prepare AI Input').item.json.correlation_id }}\nGate reason: {{ $('Confidence & Schema Gate').item.json.gate_reason }}\nIntent: {{ $('Confidence & Schema Gate').item.json.ai_intent }}\nIntent confidence: {{ $('Confidence & Schema Gate').item.json.intent_confidence }} (threshold {{ $('Confidence & Schema Gate').item.json.threshold }})\nReview ID: {{ 'lead:' + $('Prepare AI Input').item.json.correlation_id }}"
+        }
+      },
+      "id": "p1-core-review-alert",
+      "name": "Alert Human Reviewer",
+      "type": "n8n-nodes-base.asana",
+      "typeVersion": 1,
+      "position": [
+        1240,
+        220
+      ],
+      "onError": "continueRegularOutput",
+      "notes": "Human alert for the review path. The regular-output error policy means an alert failure cannot block or undo the review record."
+    },
+    {
+      "parameters": {
         "jsCode": "const lead = $('Prepare AI Input').item.json;\nconst gate = $('Confidence & Schema Gate').item.json;\nreturn [{ json: {\n  correlation_id: lead.correlation_id,\n  idempotency_key: lead.idempotency_key,\n  lead_id: lead.lead_id,\n  route: 'review_required',\n  qualification_status: 'review_required',\n  gate_reason: gate.gate_reason,\n  intent: gate.ai_intent,\n  intent_confidence: gate.intent_confidence,\n  crm_sync_status: 'not_applicable',\n  deal_eligible: false,\n  deal_created: false\n}}];"
       },
       "id": "p1-core-review-return",
@@ -254,7 +279,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1240,
+        1480,
         220
       ]
     },
@@ -493,7 +518,7 @@
       "main": [
         [
           {
-            "node": "Return Review Decision",
+            "node": "Alert Human Reviewer",
             "type": "main",
             "index": 0
           }
@@ -572,6 +597,17 @@
           {
             "node": "AI Intent + Signal Extraction",
             "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Alert Human Reviewer": {
+      "main": [
+        [
+          {
+            "node": "Return Review Decision",
+            "type": "main",
             "index": 0
           }
         ]
