@@ -191,4 +191,4 @@ if (failures) {
   process.exit(1);
 }
 
-console.log(`Validation passed for n8n-ai-lead-qualification-crm: ${expectedWorkflows.length} workflows and all fixtures.`);
+console.log(`Validation passed for n8n-lead-crm: ${expectedWorkflows.length} workflows and all fixtures.`);

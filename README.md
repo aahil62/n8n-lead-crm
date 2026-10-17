@@ -1,6 +1,6 @@
 # AI Lead Qualification → HubSpot CRM (n8n)
 
-[![Validate public workflow package](https://github.com/aahil62/n8n-ai-lead-qualification-crm/actions/workflows/validate.yml/badge.svg)](https://github.com/aahil62/n8n-ai-lead-qualification-crm/actions/workflows/validate.yml)
+[![Validate public workflow package](https://github.com/aahil62/n8n-lead-crm/actions/workflows/validate.yml/badge.svg)](https://github.com/aahil62/n8n-lead-crm/actions/workflows/validate.yml)
 
 ![AI lead qualification and HubSpot CRM automation built in n8n](assets/hero.png)
 
