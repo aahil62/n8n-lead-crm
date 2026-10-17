@@ -16,7 +16,7 @@
   },
   "expected": {
     "lead": "created with qualification_status=review_required",
-    "ai_confidence": "<0.70",
+    "ai_confidence": "<=0.70",
     "outcome": "review record + human alert; no automated external side effect; no deal"
   },
   "status": "not_run_live"
