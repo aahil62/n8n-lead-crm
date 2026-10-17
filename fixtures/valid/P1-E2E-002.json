@@ -5,7 +5,7 @@
     "source": "webhook",
     "source_event_id": "wh-2031",
     "name": "Dev Patel",
-    "email": "dev.patel@northstar.example",
+    "email": "dev.patel@example.com",
     "company": "Acme Co",
     "message": "Interested in your automation service. Looking to start in 4 weeks for a team of 8.",
     "consent_status": "unknown",
@@ -17,7 +17,7 @@
   "expected": {
     "lead": "created with score<warm threshold OR missing required budget",
     "crm_sync_status": "never synced; no deal",
-    "outcome": "approved missing-question draft created; follow_up_at stored"
+    "outcome": "missing budget recorded as an empty signal; nurture state and follow_up_at stored; no deal and no CRM call"
   },
   "status": "not_run_live"
 }

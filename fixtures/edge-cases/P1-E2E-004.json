@@ -5,7 +5,7 @@
     "source": "webhook",
     "source_event_id": "wh-2032",
     "name": "Sam Owens",
-    "email": "sam@northstar.example",
+    "email": "sam@example.com",
     "company": null,
     "message": "Hey, saw your post, maybe interested? Not sure.",
     "consent_status": "unknown",
@@ -16,7 +16,7 @@
   },
   "expected": {
     "lead": "created with qualification_status=review_required",
-    "ai_confidence": "<0.70",
+    "ai_confidence": "<=0.70",
     "outcome": "review record + human alert; no automated external side effect; no deal"
   },
   "status": "not_run_live"

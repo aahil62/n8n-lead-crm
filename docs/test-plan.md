@@ -10,7 +10,7 @@
 | `fixtures/edge-cases/` | 004, 007, 008, 013, 014 | Idempotency, returning-lead merge, NL date parsing, prompt injection, low confidence |
 | `fixtures/failure-cases/` | 009, 010, 011, 012 | CRM rate-limit/auth, LLM timeout, notification failure |
 
-All fixtures use `@northstar.example` emails and Northstar Growth Studio fictional data.
+All fixtures use `@example.com` emails (an IANA-reserved documentation domain that HubSpot accepts) and Northstar Growth Studio fictional data.
 
 ## 2. Execution method
 

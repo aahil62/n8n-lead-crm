@@ -80,8 +80,10 @@
         "jsonBody": "={{ JSON.stringify({ filterGroups: [{ filters: [{ value: $('Prepare CRM Input').item.json.email, propertyName: 'email', operator: 'EQ' }] }], properties: ['email','firstname','lastname','company'] }) }}",
         "options": {
           "response": {
-            "fullResponse": true,
-            "neverError": true
+            "response": {
+              "fullResponse": true,
+              "neverError": true
+            }
           }
         },
         "nodeCredentialType": "hubspotAppToken"
@@ -185,8 +187,9 @@
         "jsonBody": "={{ JSON.stringify({ properties: $('Prepare CRM Input').item.json.contact_properties }) }}",
         "options": {
           "response": {
-            "fullResponse": true,
-            "neverError": true
+            "response": {
+              "fullResponse": true
+            }
           }
         },
         "nodeCredentialType": "hubspotAppToken"
@@ -215,8 +218,9 @@
         "jsonBody": "={{ JSON.stringify({ properties: $('Prepare CRM Input').item.json.contact_properties }) }}",
         "options": {
           "response": {
-            "fullResponse": true,
-            "neverError": true
+            "response": {
+              "fullResponse": true
+            }
           }
         },
         "nodeCredentialType": "hubspotAppToken"
@@ -236,7 +240,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const lead = $('Resolve Contact').item.json;\nconst resp = $input.first().json;\nconst status = resp.statusCode || resp.status || 200;\nconst body = resp.body || resp;\nlet contactId = lead.contact_id;\nif (body && body.id) contactId = body.id;\nreturn [{ json: { ...lead, contact_id: contactId, contact_status: status } }];"
+        "jsCode": "const lead = $('Resolve Contact').item.json;\nconst resp = $input.first().json;\nconst statusOf = (r) => { if (!r) return 200; if (r.statusCode || r.status) return Number(r.statusCode || r.status); const e = r.error; if (!e) return 200; const c = Number(e.httpCode || e.statusCode); if (c) return c; const t = String(e.message || '') + ' ' + String(e.description || ''); if (/authorization failed|unauthor|credential/i.test(t)) return 401; if (/forbidden/i.test(t)) return 403; if (/too many requests|rate limit/i.test(t)) return 429; if (/bad request|not valid|invalid input/i.test(t)) return 400; if (/could not be found/i.test(t)) return 404; if (/conflict|already exists/i.test(t)) return 409; return 500; };\nconst status = statusOf(resp);\nconst body = resp.body || resp;\nlet contactId = lead.contact_id;\nif (body && body.id) contactId = body.id;\nreturn [{ json: { ...lead, contact_id: contactId, contact_status: status } }];"
       },
       "id": "p1-crm-capture-contact",
       "name": "Capture Contact ID",
@@ -249,6 +253,40 @@
     },
     {
       "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "e29dbdb2-8467-434e-96cc-5ae86d399b4c",
+              "leftValue": "={{ !!$json.contact_id && Number($json.contact_status) < 400 }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "032b197e-6bb7-424f-931c-934f324f8bbb",
+      "name": "Contact Captured?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1140,
+        160
+      ]
+    },
+    {
+      "parameters": {
         "method": "POST",
         "url": "https://api.hubapi.com/crm/v3/objects/companies/search",
         "authentication": "predefinedCredentialType",
@@ -257,8 +295,10 @@
         "jsonBody": "={{ JSON.stringify({ filterGroups: [{ filters: [{ value: $('Prepare CRM Input').item.json.company_name, propertyName: 'name', operator: 'EQ' }] }], properties: ['name','domain'] }) }}",
         "options": {
           "response": {
-            "fullResponse": true,
-            "neverError": true
+            "response": {
+              "fullResponse": true,
+              "neverError": true
+            }
           }
         },
         "nodeCredentialType": "hubspotAppToken"
@@ -329,8 +369,9 @@
         "jsonBody": "={{ JSON.stringify({ properties: { name: $('Prepare CRM Input').item.json.company_name } }) }}",
         "options": {
           "response": {
-            "fullResponse": true,
-            "neverError": true
+            "response": {
+              "fullResponse": true
+            }
           }
         },
         "nodeCredentialType": "hubspotAppToken"
@@ -350,7 +391,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const lead = $('Resolve Company').item.json;\nconst resp = $input.first().json;\nconst status = resp.statusCode || resp.status || 200;\nconst body = resp.body || resp;\nlet companyId = lead.company_id;\nif (body && body.id) companyId = body.id;\nconst companyStatus = lead.company_action === 'create' ? status : (lead.company_search_status || 200);\nreturn [{ json: { ...lead, company_id: companyId || '', company_status: companyStatus } }];"
+        "jsCode": "const lead = $('Resolve Company').item.json;\nconst resp = $input.first().json;\nconst statusOf = (r) => { if (!r) return 200; if (r.statusCode || r.status) return Number(r.statusCode || r.status); const e = r.error; if (!e) return 200; const c = Number(e.httpCode || e.statusCode); if (c) return c; const t = String(e.message || '') + ' ' + String(e.description || ''); if (/authorization failed|unauthor|credential/i.test(t)) return 401; if (/forbidden/i.test(t)) return 403; if (/too many requests|rate limit/i.test(t)) return 429; if (/bad request|not valid|invalid input/i.test(t)) return 400; if (/could not be found/i.test(t)) return 404; if (/conflict|already exists/i.test(t)) return 409; return 500; };\nconst status = statusOf(resp);\nconst body = resp.body || resp;\nlet companyId = lead.company_id;\nif (body && body.id) companyId = body.id;\nconst companyStatus = lead.company_action === 'create' ? status : (lead.company_search_status || 200);\nreturn [{ json: { ...lead, company_id: companyId || '', company_status: companyStatus } }];"
       },
       "id": "p1-crm-capture-company",
       "name": "Capture Company ID",
@@ -377,6 +418,81 @@
     {
       "parameters": {
         "method": "POST",
+        "url": "https://api.hubapi.com/crm/v3/objects/deals/search",
+        "authentication": "predefinedCredentialType",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ filterGroups: [{ filters: [{ propertyName: 'associations.contact', operator: 'EQ', value: $('Prepare Deal Request').item.json.contact_id }, { propertyName: 'dealstage', operator: 'NOT_IN', values: ['closedwon', 'closedlost'] }] }], properties: ['dealname', 'dealstage', 'pipeline'], limit: 1 }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true
+            }
+          }
+        },
+        "nodeCredentialType": "hubspotAppToken"
+      },
+      "id": "345d1f0b-eda3-443e-8489-a374d12842d3",
+      "name": "Search Open Deal",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        2580,
+        160
+      ],
+      "notes": "HubSpot OAuth2 credential bound by a controlled test run. neverError + fullResponse so status codes are classified in code, not thrown.",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const lead = $('Prepare Deal Request').item.json;\nconst resp = $input.first().json;\nconst err = resp.error || {};\nconst status = Number(resp.statusCode || resp.status || err.httpCode || (resp.error ? 500 : 200));\nconst results = (resp.body && resp.body.results) || resp.results || [];\nconst existing = results[0];\n// Reuse an open deal for this contact so a returning lead never creates a second deal.\nlet deal_action = 'create';\nif (status >= 400) deal_action = 'error';\nelse if (existing && existing.id) deal_action = 'reuse';\nreturn [{ json: { ...lead, deal_action, existing_deal_id: existing ? existing.id : null, deal_search_status: status } }];"
+      },
+      "id": "411f7f5d-f23a-4863-b1cc-fd545861f262",
+      "name": "Resolve Deal",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2700,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "d07398d3-f3ad-4c2e-a985-4f39bd90f0da",
+              "leftValue": "={{ $json.deal_action }}",
+              "rightValue": "create",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "ef95912b-db98-4e0d-a024-639cec631f7d",
+      "name": "Deal Needed?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2820,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
         "url": "https://api.hubapi.com/crm/v3/objects/deals",
         "authentication": "predefinedCredentialType",
         "sendBody": true,
@@ -384,8 +500,9 @@
         "jsonBody": "={{ JSON.stringify($('Prepare Deal Request').item.json.deal_body) }}",
         "options": {
           "response": {
-            "fullResponse": true,
-            "neverError": true
+            "response": {
+              "fullResponse": true
+            }
           }
         },
         "nodeCredentialType": "hubspotAppToken"
@@ -406,7 +523,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const lead = $('Capture Company ID').item.json;\nconst dealResp = $input.first().json;\nconst dealStatus = dealResp.statusCode || dealResp.status || 200;\nconst dealBody = dealResp.body || dealResp;\nlet dealId = (dealBody && dealBody.id) || null;\nconst contactId = lead.contact_id;\nconst contactStatus = lead.contact_status || 200;\nlet verified = true;\nlet error_code = '';\nlet error_class = '';\nconst code = Math.max(contactStatus, dealStatus);\nif (code >= 400) {\n  verified = false;\n  if (code === 401 || code === 403) { error_code = 'auth_error'; error_class = 'auth'; }\n  else if (code === 429 || code >= 500) { error_code = 'transient'; error_class = 'transient'; }\n  else { error_code = 'http_' + code; error_class = 'transient'; }\n}\nif (verified && (!contactId || !dealId)) { verified = false; error_code = 'missing_external_ids'; error_class = 'transient'; }\nreturn [{ json: { ...lead, contact_id: contactId, deal_id: dealId, contact_status: contactStatus, deal_status: dealStatus, verified, error_code, error_class } }];"
+        "jsCode": "const lead = $('Capture Company ID').item.json;\nconst dealResp = $input.first().json;\nconst statusOf = (r) => { if (!r) return 200; if (r.statusCode || r.status) return Number(r.statusCode || r.status); const e = r.error; if (!e) return 200; const c = Number(e.httpCode || e.statusCode); if (c) return c; const t = String(e.message || '') + ' ' + String(e.description || ''); if (/authorization failed|unauthor|credential/i.test(t)) return 401; if (/forbidden/i.test(t)) return 403; if (/too many requests|rate limit/i.test(t)) return 429; if (/bad request|not valid|invalid input/i.test(t)) return 400; if (/could not be found/i.test(t)) return 404; if (/conflict|already exists/i.test(t)) return 409; return 500; };\nconst dealStatus = statusOf(dealResp);\nconst dealBody = dealResp.body || dealResp;\nconst dealPlan = $('Resolve Deal').item.json;\nlet dealId = dealPlan.deal_action === 'reuse' ? dealPlan.existing_deal_id : ((dealBody && dealBody.id) || null);\nconst contactId = lead.contact_id;\nconst contactStatus = lead.contact_status || 200;\nlet verified = true;\nlet error_code = '';\nlet error_class = '';\nconst code = Math.max(contactStatus, dealPlan.deal_action === 'error' ? dealPlan.deal_search_status : dealPlan.deal_action === 'reuse' ? 200 : dealStatus);\nif (code >= 400) {\n  verified = false;\n  if (code === 401 || code === 403) { error_code = 'auth_error'; error_class = 'auth'; }\n  else if (code === 429 || code >= 500) { error_code = 'http_' + code; error_class = 'transient'; }\n  else { error_code = 'http_' + code; error_class = 'permanent'; }\n}\nif (verified && (!contactId || !dealId)) { verified = false; error_code = 'missing_external_ids'; error_class = 'transient'; }\nreturn [{ json: { ...lead, contact_id: contactId, deal_id: dealId, deal_reused: dealPlan.deal_action === 'reuse', contact_status: contactStatus, deal_status: dealStatus, verified, error_code, error_class } }];"
       },
       "id": "p1-crm-verify",
       "name": "Verify CRM Result",
@@ -626,7 +743,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const incoming = $input.first().json || {};\nconst resolve = $('Resolve Contact').item.json || {};\nlet status = incoming.contact_status || incoming.deal_status || incoming.search_status || resolve.search_status || 0;\nlet error_class = incoming.error_class || '';\nlet error_code = incoming.error_code || '';\nif (!error_class) {\n  if (status === 401 || status === 403) error_class = 'auth';\n  else if (status === 429 || status >= 500) error_class = 'transient';\n  else if (status >= 400) error_class = 'transient';\n  else error_class = 'transient';\n}\nif (!error_code) error_code = status ? ('http_' + status) : 'crm_failure';\nreturn [{ json: { ...resolve, ...incoming, error_class, error_code, failure_status: status } }];"
+        "jsCode": "const incoming = $input.first().json || {};\nconst resolve = $('Resolve Contact').item.json || {};\nlet status = incoming.contact_status || incoming.deal_status || incoming.search_status || resolve.search_status || 0;\nlet error_class = incoming.error_class || '';\nlet error_code = incoming.error_code || '';\nif (!error_class) {\n  if (status === 401 || status === 403) error_class = 'auth';\n  else if (status === 429 || status >= 500) error_class = 'transient';\n  else if (status >= 400) error_class = 'permanent';\n  else error_class = 'transient';\n}\nif (!error_code) error_code = status ? ('http_' + status) : 'crm_failure';\n// HubSpot searches run once; create/update calls retry up to 3 times (node retryOnFail) before failing.\nconst writeFailed = Number(incoming.contact_status) >= 400 || Number(incoming.deal_status) >= 400;\nconst attempts = writeFailed ? 3 : 1;\nreturn [{ json: { ...resolve, ...incoming, error_class, error_code, failure_status: status, attempts } }];"
       },
       "id": "p1-crm-fail-handler",
       "name": "CRM Failure Handler",
@@ -795,7 +912,7 @@
             "sanitized_input": "={{ JSON.stringify({ idempotency_key: $('CRM Failure Handler').item.json.idempotency_key, lead_id: $('CRM Failure Handler').item.json.lead_id, email: $('CRM Failure Handler').item.json.email, company: $('CRM Failure Handler').item.json.company }).slice(0, 2000) }}",
             "error_code": "={{ $('CRM Failure Handler').item.json.error_code }}",
             "retryable": "={{ $('CRM Failure Handler').item.json.error_class === 'transient' }}",
-            "attempts": 3,
+            "attempts": "={{ $('CRM Failure Handler').item.json.attempts }}",
             "status": "pending",
             "created_at": "={{ $now.toISO() }}"
           },
@@ -937,7 +1054,7 @@
       "main": [
         [
           {
-            "node": "Search HubSpot Company",
+            "node": "Contact Captured?",
             "type": "main",
             "index": 0
           }
@@ -1010,7 +1127,7 @@
       "main": [
         [
           {
-            "node": "Create HubSpot Deal",
+            "node": "Search Open Deal",
             "type": "main",
             "index": 0
           }
@@ -1182,6 +1299,64 @@
         [
           {
             "node": "Return Failure Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Contact Captured?": {
+      "main": [
+        [
+          {
+            "node": "Search HubSpot Company",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM Failure Handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Open Deal": {
+      "main": [
+        [
+          {
+            "node": "Resolve Deal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resolve Deal": {
+      "main": [
+        [
+          {
+            "node": "Deal Needed?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Deal Needed?": {
+      "main": [
+        [
+          {
+            "node": "Create HubSpot Deal",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Verify CRM Result",
             "type": "main",
             "index": 0
           }

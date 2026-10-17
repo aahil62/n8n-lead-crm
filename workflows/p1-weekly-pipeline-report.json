@@ -39,9 +39,8 @@
           "value": "REPLACE-LEADS-TABLE-ID",
           "mode": "id"
         },
-        "limit": 100,
         "options": {},
-        "returnAll": false
+        "returnAll": true
       },
       "id": "p1-report-get-leads",
       "name": "Get All Leads",
@@ -55,7 +54,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const rows = $input.all().map(i => { const f = i.json.fields || i.json; return { id: i.json.id, ...f }; });\nconst today = new Date().toISOString().slice(0, 10);\nconst countBy = (field) => { const m = {}; for (const r of rows) { const v = r[field] || 'unknown'; m[v] = (m[v] || 0) + 1; } return m; };\nconst temperature = countBy('temperature');\nconst qualification_status = countBy('qualification_status');\nconst crm_sync_status = countBy('crm_sync_status');\nconst failures = rows.filter(r => r.crm_sync_status === 'failed').length;\nconst dueFollowUps = rows.filter(r => r.follow_up_at && String(r.follow_up_at).slice(0, 10) <= today).length;\nconst total = rows.length;\nreturn [{ json: { total, temperature, qualification_status, crm_sync_status, failures, due_follow_ups: dueFollowUps, generated_at: new Date().toISOString() } }];"
+        "jsCode": "const windowEnd = new Date();\nconst windowStart = new Date(windowEnd.getTime() - 7 * 86400000);\nconst all = $input.all().filter(i => i.json && i.json.id).map(i => { const f = i.json.fields || i.json; return { id: i.json.id, createdTime: i.json.createdTime, ...f }; });\n// Leads created in the last 7 days. Every stored lead is fetched (returnAll) so counts are never truncated.\nconst rows = all.filter(r => { const t = new Date(r.created_at || r.createdTime); return t >= windowStart && t <= windowEnd; });\nconst today = new Date().toISOString().slice(0, 10);\nconst countBy = (field) => { const m = {}; for (const r of rows) { const v = r[field] || 'unknown'; m[v] = (m[v] || 0) + 1; } return m; };\nconst temperature = countBy('temperature');\nconst qualification_status = countBy('qualification_status');\nconst crm_sync_status = countBy('crm_sync_status');\nconst failures = rows.filter(r => r.crm_sync_status === 'failed').length;\nconst dueFollowUps = rows.filter(r => r.follow_up_at && String(r.follow_up_at).slice(0, 10) <= today).length;\nconst total = rows.length;\nreturn [{ json: { window_start: windowStart.toISOString(), window_end: windowEnd.toISOString(), total, temperature, qualification_status, crm_sync_status, failures, due_follow_ups: dueFollowUps, generated_at: new Date().toISOString() } }];"
       },
       "id": "p1-report-aggregate",
       "name": "Aggregate Pipeline",
@@ -82,15 +81,16 @@
       ],
       "retryOnFail": true,
       "maxTries": 2,
-      "continueOnFail": true
+      "continueOnFail": true,
+      "onError": "continueRegularOutput"
     },
     {
       "parameters": {
         "model": {
           "__rl": true,
           "mode": "list",
-          "value": "gpt-4o-mini",
-          "cachedResultName": "gpt-4o-mini"
+          "value": "openai/gpt-oss-20b",
+          "cachedResultName": "openai/gpt-oss-20b"
         },
         "options": {}
       },
@@ -106,7 +106,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const agg = $('Aggregate Pipeline').item.json;\nconst ai = $input.first().json;\nconst narrative = (ai && (ai.text || ai.output || (ai.json && ai.json.text))) || '';\nconst lines = [];\nlines.push('Weekly Pipeline Report — Northstar Growth Studio');\nlines.push('Generated: ' + agg.generated_at);\nlines.push('');\nlines.push('TOTAL LEADS: ' + agg.total);\nlines.push('By temperature: ' + JSON.stringify(agg.temperature));\nlines.push('By qualification_status: ' + JSON.stringify(agg.qualification_status));\nlines.push('By crm_sync_status: ' + JSON.stringify(agg.crm_sync_status));\nlines.push('CRM sync failures: ' + agg.failures);\nlines.push('Due follow-ups: ' + agg.due_follow_ups);\nlines.push('');\nlines.push('Narrative:');\nlines.push(narrative || '(AI summary unavailable; aggregates above are authoritative.)');\nreturn [{ json: { report_text: lines.join('\\n'), aggregates: agg, narrative } }];"
+        "jsCode": "const agg = $('Aggregate Pipeline').item.json;\nconst ai = $input.first().json;\nconst narrative = (ai && (ai.text || ai.output || (ai.json && ai.json.text))) || '';\nconst lines = [];\nlines.push('Weekly Pipeline Report — Northstar Growth Studio');\nlines.push('Generated: ' + agg.generated_at);\nlines.push('');\nlines.push('Window: ' + agg.window_start + ' to ' + agg.window_end);\nlines.push('TOTAL LEADS: ' + agg.total);\nlines.push('By temperature: ' + JSON.stringify(agg.temperature));\nlines.push('By qualification_status: ' + JSON.stringify(agg.qualification_status));\nlines.push('By crm_sync_status: ' + JSON.stringify(agg.crm_sync_status));\nlines.push('CRM sync failures: ' + agg.failures);\nlines.push('Due follow-ups: ' + agg.due_follow_ups);\nlines.push('');\nlines.push('Narrative:');\nlines.push(narrative || '(AI summary unavailable; aggregates above are authoritative.)');\nreturn [{ json: { report_text: lines.join('\\n'), aggregates: agg, narrative } }];"
       },
       "id": "p1-report-build",
       "name": "Build Report",

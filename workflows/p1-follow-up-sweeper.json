@@ -38,7 +38,7 @@
           "value": "REPLACE-LEADS-TABLE-ID",
           "mode": "id"
         },
-        "filterByFormula": "AND({follow_up_at} IS NOT BLANK(), DATETIME_DIFF({follow_up_at}, TODAY(), 'days') <= 0)",
+        "filterByFormula": "AND(NOT({follow_up_at} = BLANK()), DATETIME_DIFF({follow_up_at}, TODAY(), 'days') <= 0)",
         "limit": 100,
         "options": {},
         "returnAll": false
@@ -72,12 +72,12 @@
         "resource": "task",
         "operation": "create",
         "workspace": "REPLACE-ASANA-WORKSPACE-ID",
-        "name": "={{ 'Follow-up due: ' + $json.name + ' (' + ($json.company || $json.email) + ')' }}",
+        "name": "={{ 'Follow-up due: ' + $('Filter Unreminded').item.json.name + ' (' + ($('Filter Unreminded').item.json.company || $('Filter Unreminded').item.json.email) + ')' }}",
         "otherProperties": {
           "projects": [
             "REPLACE-ASANA-PROJECT-ID"
           ],
-          "notes": "=Lead: {{ $json.name }} ({{ $json.email }})\nCompany: {{ $json.company }}\nTemperature: {{ $json.temperature }} (score {{ $json.score }})\nStatus: {{ $json.qualification_status }}\nOwner: {{ $json.owner_id }}\nDue since: {{ $json.follow_up_at }}\n\nSummary: {{ $json.summary }}\n\nCorrelation ID: {{ $json.correlation_id }}"
+          "notes": "=Lead: {{ $('Filter Unreminded').item.json.name }} ({{ $('Filter Unreminded').item.json.email }})\nCompany: {{ $('Filter Unreminded').item.json.company }}\nTemperature: {{ $('Filter Unreminded').item.json.temperature }} (score {{ $('Filter Unreminded').item.json.score }})\nStatus: {{ $('Filter Unreminded').item.json.qualification_status }}\nOwner: {{ $('Filter Unreminded').item.json.owner_id }}\nDue since: {{ $('Filter Unreminded').item.json.follow_up_at }}\n\nSummary: {{ $('Filter Unreminded').item.json.summary }}\n\nCorrelation ID: {{ $('Filter Unreminded').item.json.correlation_id }}"
         }
       },
       "id": "p1-sweep-asana",
@@ -85,7 +85,7 @@
       "type": "n8n-nodes-base.asana",
       "typeVersion": 1,
       "position": [
-        320,
+        560,
         0
       ],
       "continueOnFail": true
@@ -110,7 +110,8 @@
           "value": {
             "last_action_at": "={{ $now.toISO() }}",
             "updated_at": "={{ $now.toISO() }}",
-            "id": "={{ $('Filter Unreminded').item.json.lead_id }}"
+            "id": "={{ $('Filter Unreminded').item.json.lead_id }}",
+            "reminder_sent_at": "={{ $now.toISO() }}"
           },
           "matchingColumns": [
             "id"
@@ -124,7 +125,7 @@
       "type": "n8n-nodes-base.airtable",
       "typeVersion": 2.2,
       "position": [
-        560,
+        320,
         0
       ],
       "retryOnFail": true,
@@ -171,7 +172,7 @@
       "main": [
         [
           {
-            "node": "Create Reminder Task",
+            "node": "Mark Reminder Sent",
             "type": "main",
             "index": 0
           }
@@ -182,7 +183,7 @@
       "main": [
         [
           {
-            "node": "Mark Reminder Sent",
+            "node": "Build Sweep Summary",
             "type": "main",
             "index": 0
           }
@@ -193,7 +194,7 @@
       "main": [
         [
           {
-            "node": "Build Sweep Summary",
+            "node": "Create Reminder Task",
             "type": "main",
             "index": 0
           }

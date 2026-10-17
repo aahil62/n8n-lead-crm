@@ -1,4 +1,5 @@
-route,min_score,owner,follow_up_days,active
-qualified,70,sales-owner,0,true
-nurture,30,nurture-owner,3,true
-review,0,review-owner,0,true
+condition,owner_id,notification_channel,calendar_link,active
+qualified,sales-owner,asana,https://calendar.example/book-intro,true
+nurture,nurture-owner,asana,,true
+existing_customer,account-owner,asana,,true
+spam,unassigned,asana,,true

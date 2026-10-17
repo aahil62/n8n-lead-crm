@@ -5,7 +5,7 @@
     "source": "gmail",
     "source_event_id": "gmail-5503",
     "name": "Dev Patel",
-    "email": "dev.patel@northstar.example",
+    "email": "dev.patel@example.com",
     "company": "Acme Co",
     "message": "Check back with me in two weeks, we are reviewing internally.",
     "consent_status": "known-opt-in",

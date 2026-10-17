@@ -5,7 +5,7 @@
     "source": "gmail",
     "source_event_id": "gmail-5500",
     "name": "Anita Rao",
-    "email": "anita.rao@northstar.example",
+    "email": "anita.rao@example.com",
     "company": "Northstar Growth Studio",
     "message": "We have an issue with our current automation, need support help.",
     "consent_status": "not-applicable",

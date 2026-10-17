@@ -5,7 +5,7 @@
     "source": "gmail",
     "source_event_id": "gmail-5501",
     "name": "Promo Bot",
-    "email": "no-reply@promo.example",
+    "email": "no-reply@promo.example.com",
     "company": null,
     "message": "50% off all courses, limited time! Click here.",
     "consent_status": "not-applicable",

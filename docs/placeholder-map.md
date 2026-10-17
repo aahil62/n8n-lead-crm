@@ -6,8 +6,8 @@ Do not perform a global replacement across unrelated resources.
 | Placeholder | Resource | Used in | Required permission |
 |---|---|---|---|
 | `REPLACE-AIRTABLE-BASE-ID` | Airtable base | `p1-crm-handoff.json`, `p1-follow-up-sweeper.json`, `p1-lead-intake.json`, `p1-qualification-core.json`, `p1-weekly-pipeline-report.json`, `shared-error-handler.json` | Read/write for only the documented tables |
-| `REPLACE-ASANA-PROJECT-ID` | Asana project | `p1-crm-handoff.json`, `p1-follow-up-sweeper.json`, `p1-weekly-pipeline-report.json`, `shared-error-handler.json` | Task creation |
-| `REPLACE-ASANA-WORKSPACE-ID` | Asana workspace | `p1-crm-handoff.json`, `p1-follow-up-sweeper.json`, `p1-weekly-pipeline-report.json`, `shared-error-handler.json` | Workspace lookup |
+| `REPLACE-ASANA-PROJECT-ID` | Asana project | `p1-crm-handoff.json`, `p1-follow-up-sweeper.json`, `p1-qualification-core.json`, `p1-weekly-pipeline-report.json`, `shared-error-handler.json` | Task creation |
+| `REPLACE-ASANA-WORKSPACE-ID` | Asana workspace | `p1-crm-handoff.json`, `p1-follow-up-sweeper.json`, `p1-qualification-core.json`, `p1-weekly-pipeline-report.json`, `shared-error-handler.json` | Workspace lookup |
 | `REPLACE-DEAD-LETTER-TABLE-ID` | Airtable dead-letter table | `p1-crm-handoff.json`, `p1-lead-intake.json`, `shared-error-handler.json` | Read/write |
 | `REPLACE-EXECUTION-AUDIT-TABLE-ID` | Airtable execution-audit table | `shared-error-handler.json` | Read/write |
 | `REPLACE-LEADS-TABLE-ID` | Airtable leads table | `p1-crm-handoff.json`, `p1-follow-up-sweeper.json`, `p1-lead-intake.json`, `p1-qualification-core.json`, `p1-weekly-pipeline-report.json` | Read/write |
