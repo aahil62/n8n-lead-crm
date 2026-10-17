@@ -123,7 +123,7 @@ No. It reads and summarises. Every customer-facing action comes from your rules 
 In your own n8n, Airtable and HubSpot accounts. Credentials are stored in n8n's encrypted credential store, never in the workflow files.
 
 **What if HubSpot is down or the AI times out?**
-By design, the lead isn't marked as synced. The failure goes to a dead-letter table with enough context to replay it, and configuration errors such as an expired token create an alert task. These failure paths have written test cases but haven't been run live yet.
+By design, the lead isn't marked as synced. The failure goes to a dead-letter table with enough context to replay it, and configuration errors such as an expired token create an alert task. The expired-token (401) path has passed a live test; the rate-limit and outage paths have test cases but haven't been run live yet.
 
 **Can I change how leads are scored?**
 Yes. Edit the scoring table in Airtable, with no workflow change needed.
