@@ -1,32 +1,35 @@
 # Test Report — AI Lead Qualification, CRM, and Follow-Up System
 
-**Status:** `representative_live_path_passed`. The qualified-lead path passed intake, Airtable persistence, AI qualification, HubSpot contact/company/deal creation, Airtable verification, and Asana notification.
+**Status:** `representative_live_path_passed`, plus 4 edge/failure scenarios run live on 2026-10-17. The qualified-lead path passed intake, Airtable persistence, AI qualification, HubSpot contact/company/deal creation, Airtable verification, and Asana notification. Of the 2026-10-17 runs, duplicate replay and prompt injection passed, CRM 401 handling passed when the CRM handoff was invoked directly, and the low-confidence review gate failed.
+
+**2026-10-17 run environment:** sandbox n8n 2.23.4 (Docker, localhost), repo workflow JSON imported as separate `[TEST]` copies with sandbox IDs filled in, Airtable test base, HubSpot test account, Asana test project, same Groq-hosted model as P1-E2E-001. Fixture payloads were posted unchanged to the P1-01 webhook. The forced 401 used a deliberately invalid dummy HubSpot token on the test copy only.
 
 | Test ID | Scenario | Fixture path | Expected result | Actual result | n8n execution | External evidence | Result | Notes |
 |---|---|---|---|---|---|---|---|---|
 | P1-E2E-001 | High-quality new lead | `fixtures/valid/P1-E2E-001.json` | One contact + one deal upserted; correct score, owner, alert, `synced` state, external IDs | Score 100, hot, confidence 0.90; Airtable lead marked synced; HubSpot contact/company/deal created and verified; Asana task created; final status `crm_handoff_complete` | parent 75; children 76/77 | Airtable `[sanitized Airtable record]`; HubSpot contact `[sanitized HubSpot record]`, company `[sanitized HubSpot record]`, deal `[sanitized HubSpot record]`; Asana `[sanitized Asana task]` | `passed` | Service-key credential `REPLACE-HUBSPOT-CREDENTIAL-ID`; deal stage `qualifiedtobuy` in default pipeline |
 | P1-E2E-002 | Warm lead missing budget | `fixtures/valid/P1-E2E-002.json` | Missing information recorded, nurture state stored, and owner follow-up scheduled; no deal | — | — | — | `not_run_live` | Route = nurture; follow_up_at set |
 | P1-E2E-003 | Cold lead | `fixtures/valid/P1-E2E-003.json` | No deal and no sales alert; audited | — | — | — | `not_run_live` | Route = spam (score < 30) or cold nurture |
-| P1-E2E-004 | Low AI confidence | `fixtures/edge-cases/P1-E2E-004.json` | Review record + human alert; no external side effect | — | — | — | `not_run_live` | intent_confidence < 0.70 → review_required |
+| P1-E2E-004 | Low AI confidence | `fixtures/edge-cases/P1-E2E-004.json` | Review record + human alert; no external side effect | Model returned `intent_confidence` 0.70 (exactly the threshold); gate only routes `< 0.70` to review, so the lead was routed to nurture (score 0, cold) instead of the review queue. No review record or human alert was created. No deal and no HubSpot call | parent 221; child 222 | Airtable lead `[sanitized Airtable record]` (`qualification_status=nurture`); no review_queue record; no HubSpot or Asana activity | `failed` | Safe outcome held (no external side effect) but the review gate did not fire. Follow-up: treat confidence at or near the threshold as review, and/or calibrate the prompt so vague messages score below 0.70 |
 | P1-E2E-005 | Existing customer request | `fixtures/edge-cases/P1-E2E-005.json` | Classified as an existing-customer request; no new sales deal | — | — | — | `not_run_live` | intent = existing_customer; support-queue integration is an optional adapter |
 | P1-E2E-006 | Spam/newsletter | `fixtures/edge-cases/P1-E2E-006.json` | Stopped and audited; no reply/deal/task | — | — | — | `not_run_live` | intent = spam_or_other |
-| P1-E2E-007 | Duplicate webhook replay | `fixtures/edge-cases/P1-E2E-007.json` | Same lead state + CRM IDs; no duplicate contact/deal/alert | — | — | — | `not_run_live` | Send same input twice; idempotency_key dedup |
+| P1-E2E-007 | Duplicate webhook replay | `fixtures/edge-cases/P1-E2E-007.json` | Same lead state + CRM IDs; no duplicate contact/deal/alert | First send created one Airtable lead and was qualified (score 40, warm, nurture). Second identical send matched `idempotency_key=webhook:wh-2031`, returned the existing lead ID and state with `final_status=duplicate_no_action`; no second lead record, no second AI call, no CRM or Asana call | first send: parent 223, child 224; replay: 225 (no child) | Airtable lead `[sanitized Airtable record]` (single record, same ID returned on replay) | `passed` | Proves intake-level dedup. The first send routed to nurture, so HubSpot-side dedup on replay was not exercised in this run |
 | P1-E2E-008 | Returning lead adds timeline | `fixtures/edge-cases/P1-E2E-008.json` | Existing facts preserved, new signal merged, score recalculated | — | — | — | `not_run_live` | Seed known signals then send new message |
 | P1-E2E-009 | CRM 429/5xx | `fixtures/failure-cases/P1-E2E-009.json` | Capped retry; success or dead-letter w/ replay; no false `synced` | — | — | — | `not_run_live` | Induce 429; retryable=true in dead_letter |
-| P1-E2E-010 | CRM 401 | `fixtures/failure-cases/P1-E2E-010.json` | Immediate config alert; no retry storm | — | — | — | `not_run_live` | Induce 401; retryable=false; single Asana alert |
+| P1-E2E-010 | CRM 401 | `fixtures/failure-cases/P1-E2E-010.json` | Immediate config alert; no retry storm | Full path: fixture qualified as warm (score 65) and routed to nurture, so it never reached CRM. Component run: CRM Handoff invoked directly with this lead's real qualification output with `deal_eligible` forced true, using a deliberately invalid HubSpot token. HubSpot rejected the token on the first contact search (one call, no retries); classified `error_class=auth`, `error_code=http_401`; one Asana config alert created; lead marked `crm_sync_status=failed`; dead-letter row written; `deal_created=false` | full path: parent 228, child 229; component: harness 230, CRM handoff 231 | Asana `[sanitized Asana task]` (`[ALERT][CRITICAL] CRM auth error`); Airtable lead `[sanitized Airtable record]` (`last_error_code=http_401`); dead-letter `[sanitized Airtable record]` | `passed_component` | 401 handling passed; the full fixture did not reach CRM under the current scoring config. n8n surfaced the auth failure as an error message (no HTTP status), which the workflow mapped to 401. Dead-letter `attempts` is hard-coded to 3 although only one call was made |
 | P1-E2E-011 | LLM timeout/malformed | `fixtures/failure-cases/P1-E2E-011.json` | Review path; no deal created | — | — | — | `not_run_live` | continueOnFail on AI chain → gate → review |
 | P1-E2E-012 | Notification failure after CRM success | `fixtures/failure-cases/P1-E2E-012.json` | Deal stays synced; notification `failed` + replayable | — | — | — | `not_run_live` | Break Asana post-sync; deal_unchanged=true |
 | P1-E2E-013 | Natural-language follow-up date | `fixtures/edge-cases/P1-E2E-013.json` | Timezone-aware date stored; reminded exactly once when due | — | — | — | `not_run_live` | Asia/Kolkata; reminder_sent_at idempotency |
-| P1-E2E-014 | Malicious instructions in lead text | `fixtures/edge-cases/P1-E2E-014.json` | Text treated as data; schema/policy intact | — | — | — | `not_run_live` | Prompt forbids following in-message instructions |
+| P1-E2E-014 | Malicious instructions in lead text | `fixtures/edge-cases/P1-E2E-014.json` | Text treated as data; schema/policy intact | Model classified the message as `spam_or_other` (confidence 0.99) with summary "spam message attempting to manipulate the system"; output schema intact; system prompt not revealed; deterministic score 25, routed to spam; `deal_eligible=false`, no CRM call | parent 226; child 227 | Airtable lead `[sanitized Airtable record]` (`qualification_status=spam`); no HubSpot or Asana activity | `passed` | The injected "$999k" was copied into `extracted_signals.budget`, but the deterministic score and routing ignored it |
 | P1-E2E-015 | Weekly report | `fixtures/valid/P1-E2E-015.json` | Aggregates match seeded records; failed syncs visible | — | — | — | `not_run_live` | Deterministic aggregates; AI only narrates |
 
 ## Summary
 
 - **Total scenarios:** 15
-- **Passed:** 1
-- **Failed:** 0
+- **Passed (full path):** 3 (P1-E2E-001, P1-E2E-007, P1-E2E-014)
+- **Passed (component only):** 1 (P1-E2E-010, CRM handoff invoked directly)
+- **Failed:** 1 (P1-E2E-004)
 - **Blocked by external auth:** 0
-- **Not run live:** 14
-- **Runtime evidence captured:** Airtable, HubSpot, Asana, and n8n sanitized executions/77
+- **Not run live:** 10
+- **Runtime evidence captured:** Airtable, HubSpot, Asana, and sanitized n8n executions 75-77 and 221-231
 
-The representative positive path is verified. The other 14 fixtures remain explicit pre-production matrix work, not implied passes.
+P1-E2E-004 is a real failure: the review gate did not fire at a confidence of exactly 0.70. The other 10 fixtures remain explicit pre-production matrix work, not implied passes.
