@@ -103,7 +103,7 @@ Testing used a sandbox with fictional data, an n8n instance, Airtable, a HubSpot
 | ✅ Passed live | HubSpot 429: exactly 3 attempts, then the lead was marked failed (never "synced") and a retryable dead-letter record was written |
 | ✅ Passed live | Asana down after a successful CRM write: the deal stayed synced and the missed notification was saved for replay |
 | ✅ Passed live | Weekly report: every number matched an independent recount of the stored leads |
-| ⚠️ Partly passed live | Follow-up timing: "check back with me in two weeks" stored a date exactly 14 days out (India time). The once-only reminder isn't proven yet, because the sandbox Airtable base is missing the field it needs. The sweeper now records a reminder before sending it, so a failure can't cause repeat reminders |
+| ✅ Passed live | Follow-up timing: "check back with me in two weeks" stored a date exactly 14 days out (India time), and the daily sweep sent that reminder once; a second sweep sent nothing |
 
 Testing also found and fixed real defects: a confidence boundary bug, duplicate deals for returning leads, retries that never fired, and a follow-up sweeper that couldn't run and could repeat reminders. The [test report](docs/test-report.md) lists each one.
 
